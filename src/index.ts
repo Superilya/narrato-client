@@ -1,10 +1,6 @@
 import TelegramBot from 'node-telegram-bot-api';
 import fetch from 'isomorphic-fetch';
 
-const headers = {
-    Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjA2MjE4MzAxLCJlbWFpbCI6ImFkbWluQHRlc3QudGVzdCJ9.xCw2iQwUo6glSRDT7BgijPGNOYwxSk08rugdY68AOjY`
-}
-
 const auths: Record<number, string> = {};
 
 const bot = new TelegramBot('1414153319:AAGT44tTq_BCCHvW3-bF3aMFzHnzvT4AvIk', { polling: true });
@@ -24,6 +20,7 @@ bot.on('message', async (msg) => {
     if (msg.text.startsWith('/setauth')) {
         const [command, auth] = msg.text.split(' ');
 
+        console.log('command', command);
         auths[msg.chat.id] = auth;
 
         return;
@@ -46,7 +43,7 @@ bot.on('message', async (msg) => {
             await bot.sendMessage(msg.chat.id, Queries.SELECT_PROJECT, {
                 reply_markup: {
                     inline_keyboard: [
-                        result.results.map(({ label, uuid }) => ({ text: label, callback_data: uuid }))
+                        result.results.map(({ label, uuid }: { label: string; uuid: string }) => ({ text: label, callback_data: uuid }))
                     ]
                 }
             });
